@@ -1,298 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Work Shift Calendar</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Coverage Calendar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f6f9;
+            color: #333;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
 
-    .calendar-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+        .calendar {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
 
-    .calendar-controls button {
-      padding: 8px 16px;
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .month-name {
-      font-size: 24px;
-      font-weight: bold;
-    }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eaeaea;
+        }
 
-    .legend {
-      display: flex;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+        th {
+            background-color: #34495e;
+            color: white;
+            text-transform: uppercase;
+        }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      margin-right: 20px;
-      margin-bottom: 10px;
-    }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
 
-    .color-box {
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-    }
+        .off {
+            color: #e74c3c;
+            font-weight: bold;
+        }
 
-    .first-shift {
-      background-color: #BBDEFB;
-    }
-
-    .second-shift {
-      background-color: #C8E6C9;
-    }
-
-    .third-shift {
-      background-color: #E1BEE7;
-    }
-
-    .manager-cover {
-      background-color: #FFF59D;
-    }
-
-    .off-day {
-      background-color: #F5F5F5;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    .day-number {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .shift-name {
-      font-size: 14px;
-    }
-
-    .empty-cell {
-      background-color: #ffffff;
-    }
-  </style>
+        .covering {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <h1>Work Shift Calendar</h1>
-
-  <div class="calendar-controls">
-    <button id="prev-month">&lt; Previous Month</button>
-    <div class="month-name" id="month-display">May 2025</div>
-    <button id="next-month">Next Month &gt;</button>
-  </div>
-
-  <div class="legend">
-    <div class="legend-item">
-      <div class="color-box first-shift"></div> <div>1st Shift (Ben)</div>
+    <h1>Weekly Supervisor Coverage</h1>
+    <div class="calendar">
+        <table>
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Supervisor Off</th>
+                    <th>Manager Covering</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Monday</td>
+                    <td class="off">Chris (3rd Shift)</td>
+                    <td class="covering">Miguel</td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td class="off">Ben (1st Shift)</td>
+                    <td class="covering">Miguel</td>
+                </tr>
+                <tr>
+                    <td>Wednesday</td>
+                    <td class="off">Deunte (2nd Shift)</td>
+                    <td class="covering">Miguel</td>
+                </tr>
+                <tr>
+                    <td>Thursday</td>
+                    <td class="off">None</td>
+                    <td class="covering">—</td>
+                </tr>
+                <tr>
+                    <td>Friday</td>
+                    <td class="off">None</td>
+                    <td class="covering">—</td>
+                </tr>
+                <tr>
+                    <td>Saturday</td>
+                    <td colspan="2">All Off</td>
+                </tr>
+                <tr>
+                    <td>Sunday</td>
+                    <td colspan="2">All Off</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div class="legend-item">
-      <div class="color-box second-shift"></div> <div>2nd Shift (Deunte)</div>
-    </div>
-    <div class="legend-item">
-      <div class="color-box third-shift"></div> <div>3rd Shift (Chris)</div>
-    </div>
-    <div class="legend-item">
-      <div class="color-box manager-cover"></div> <div>Manager Covers</div>
-    </div>
-    <div class="legend-item">
-      <div class="color-box off-day"></div> <div>OFF</div>
-    </div>
-  </div>
-
-  <table id="calendar">
-    <thead>
-      <tr>
-        <th>Sunday</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-      </tr>
-    </thead>
-    <tbody id="calendar-body"></tbody>
-  </table>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const referenceDate = new Date(2025, 4, 5); // May 5, 2025 (Monday)
-      let currentMonth = 4;
-      let currentYear = 2025;
-
-      const monthDisplay = document.getElementById('month-display');
-      const calendarBody = document.getElementById('calendar-body');
-      const prevMonthBtn = document.getElementById('prev-month');
-      const nextMonthBtn = document.getElementById('next-month');
-
-      prevMonthBtn.addEventListener('click', () => {
-        currentMonth--;
-        if (currentMonth < 0) {
-          currentMonth = 11;
-          currentYear--;
-        }
-        generateCalendar(currentYear, currentMonth);
-      });
-
-      nextMonthBtn.addEventListener('click', () => {
-        currentMonth++;
-        if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
-        }
-        generateCalendar(currentYear, currentMonth);
-      });
-
-      function getDaysInMonth(year, month) {
-        return new Date(year, month + 1, 0).getDate();
-      }
-
-      function getFirstDayOfMonth(year, month) {
-        return new Date(year, month, 1).getDay();
-      }
-
-      function getMonthName(month) {
-        return ['January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'][month];
-      }
-
-      function getDayName(dayIndex) {
-        return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayIndex];
-      }
-
-      function getShiftsForDay(dayName) {
-        switch (dayName) {
-          case 'Monday':
-            return {
-              '3rd Shift': 'OFF',
-              '1st Shift': '1st Shift',
-              '2nd Shift': '2nd Shift',
-              'Manager': 'Covers 3rd Shift'
-            };
-          case 'Tuesday':
-            return {
-              '3rd Shift': '3rd Shift',
-              '1st Shift': 'OFF',
-              '2nd Shift': '2nd Shift',
-              'Manager': 'Covers 1st Shift'
-            };
-          case 'Wednesday':
-            return {
-              '3rd Shift': '3rd Shift',
-              '1st Shift': '1st Shift',
-              '2nd Shift': 'OFF',
-              'Manager': 'Covers 2nd Shift'
-            };
-          case 'Thursday':
-          case 'Friday':
-            return {
-              '3rd Shift': '3rd Shift',
-              '1st Shift': '1st Shift',
-              '2nd Shift': '2nd Shift',
-              'Manager': 'OFF'
-            };
-          case 'Saturday':
-          case 'Sunday':
-            return {
-              '3rd Shift': 'OFF',
-              '1st Shift': 'OFF',
-              '2nd Shift': 'OFF',
-              'Manager': 'OFF'
-            };
-          default:
-            return {};
-        }
-      }
-
-      function getShiftClass(role, shift) {
-        if (shift === 'OFF') return 'off-day';
-        if (role === 'Manager') return 'manager-cover';
-        if (role === '1st Shift') return 'first-shift';
-        if (role === '2nd Shift') return 'second-shift';
-        if (role === '3rd Shift') return 'third-shift';
-        return '';
-      }
-
-      function generateCalendar(year, month) {
-        calendarBody.innerHTML = '';
-        monthDisplay.textContent = `${getMonthName(month)} ${year}`;
-
-        const daysInMonth = getDaysInMonth(year, month);
-        const firstDay = getFirstDayOfMonth(year, month);
-        let date = 1;
-        let rowCount = Math.ceil((daysInMonth + firstDay) / 7);
-
-        for (let row = 0; row < rowCount; row++) {
-          const tr = document.createElement('tr');
-          for (let col = 0; col < 7; col++) {
-            const td = document.createElement('td');
-
-            if (row === 0 && col < firstDay || date > daysInMonth) {
-              td.classList.add('empty-cell');
-              tr.appendChild(td);
-              continue;
-            }
-
-            const currentDate = new Date(year, month, date);
-            const dayName = getDayName(currentDate.getDay());
-            const shifts = getShiftsForDay(dayName);
-
-            const dayNumber = document.createElement('div');
-            dayNumber.classList.add('day-number');
-            dayNumber.textContent = date;
-
-            td.appendChild(dayNumber);
-
-            for (let [role, shift] of Object.entries(shifts)) {
-              const shiftDiv = document.createElement('div');
-              shiftDiv.classList.add('shift-name');
-              shiftDiv.textContent = `${role}: ${shift}`;
-              td.classList.add(getShiftClass(role, shift));
-              td.appendChild(shiftDiv);
-            }
-
-            date++;
-            tr.appendChild(td);
-          }
-          calendarBody.appendChild(tr);
-        }
-      }
-
-      generateCalendar(currentYear, currentMonth);
-    });
-  </script>
 </body>
 </html>
