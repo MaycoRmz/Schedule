@@ -1,10 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Shift Calendar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        header, footer {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .month-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+
+        .first-shift { background-color: #BBDEFB; }
+        .second-shift { background-color: #C8E6C9; }
+        .third-shift { background-color: #E1BEE7; }
+        .off-day { background-color: #F5F5F5; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ecf0f1;
+        }
+
+        .day-number {
+            font-weight: bold;
+        }
+
+        .shift-name {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .empty-cell {
+            background-color: #fff;
+        }
+
+        @media print {
+            button, .legend, .calendar-controls, header, footer {
+                display: none;
+            }
+            body {
+                background: white;
+                margin: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>This is my website hosted on GitHub Pages.</p>
+    <header>
+        <h1>Work Shift Calendar</h1>
+        <h2>Hello World!</h2>
+    </header>
+
+    <div class="calendar-controls">
+        <button id="prev-month">&lt; Previous</button>
+        <div class="month-name" id="month-display"></div>
+        <button id="next-month">Next &gt;</button>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="color-box first-shift"></div>1st Shift</div>
+        <div class="legend-item"><div class="color-box second-shift"></div>2nd Shift</div>
+        <div class="legend-item"><div class="color-box third-shift"></div>3rd Shift</div>
+        <div class="legend-item"><div class="color-box off-day"></div>OFF</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
+                <th>Thu</th><th>Fri</th><th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+    </table>
+
+    <footer>
+        <p>&copy; 2025 Work Shift Calendar | All rights reserved.</p>
+    </footer>
+
+    <script>
+        const shiftPattern = [
+            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '2nd Shift', 'Thu': '2nd Shift', 'Fri': '1st Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
+            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '1st Shift', 'Thu': '1st Shift', 'Fri': '2nd Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
+            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': 'OFF', 'Thu': '2nd Shift', 'Fri': '2nd Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
+            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '2nd Shift', 'Thu': '1st Shift', 'Fri': '1st Shift', 'Sat': 'OFF', 'Sun': 'OFF'}
+        ];
+
+        const referenceDate = new Date(2025, 4, 1);
+        let currentMonth = 4;
+        let currentYear = 2025;
+
+        const calendarBody = document.getElementById('calendar-body');
+        const monthDisplay = document.getElementById('month-display');
+
+        document.getElementById('prev-month').onclick = () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } generateCalendar(); };
+        document.getElementById('next-month').onclick = () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } generateCalendar(); };
+
+        function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+        function getFirstDayOfMonth(y, m) { return new Date(y, m, 1).getDay(); }
+        function getMonthName(m) {
+            return ['January','February','March','April','May','June','July','August','September','October','November','December'][m];
+        }
+        function getDayName(i) { return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][i]; }
+        function getShiftClass(shift) {
+            return {
+                '1st Shift': 'first-shift',
+                '2nd Shift': 'second-shift',
+                '3rd Shift': 'third-shift',
+                'OFF': 'off-day'
+            }[shift] || '';
+        }
+
+        function getShift(y, m, d) {
+            const date = new Date(y, m, d);
+            const diffDays = Math.floor((date - referenceDate) / (1000 * 60 * 60 * 24));
+            const weekIndex = Math.floor(Math.abs(diffDays) / 7) % 4;
+            const adjIndex = diffDays < 0 ? (4 - (Math.abs(diffDays) % 28) % 4) % 4 : weekIndex;
+            return shiftPattern[adjIndex][getDayName(date.getDay())] || '';
+        }
+
+        function generateCalendar() {
+            monthDisplay.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+            calendarBody.innerHTML = '';
+
+            const days = getDaysInMonth(currentYear, currentMonth);
+            const start = getFirstDayOfMonth(currentYear, currentMonth);
+            let date = 1;
+
+            for (let row = 0; row < 6; row++) {
+                const tr = document.createElement('tr');
+                for (let col = 0; col < 7; col++) {
+                    const td = document.createElement('td');
+                    if (row === 0 && col < start || date > days) {
+                        td.classList.add('empty-cell');
+                    } else {
+                        const shift = getShift(currentYear, currentMonth, date);
+                        td.classList.add(getShiftClass(shift));
+                        td.innerHTML = `<div class="day-number">${date}</div><div class="shift-name">${shift}</div>`;
+                        date++;
+                    }
+                    tr.appendChild(td);
+                }
+                calendarBody.appendChild(tr);
+            }
+        }
+
+        generateCalendar();
+    </script>
 </body>
 </html>
