@@ -1,217 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Shift Calendar</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-            background: #f9f9f9;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Work Shift Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        header, footer {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-        h1 {
-            font-size: 2.5em;
-            color: #2c3e50;
-        }
+    .calendar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-        .calendar-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .calendar-controls button {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    .month-name {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-        .month-name {
-            font-size: 24px;
-            font-weight: bold;
-        }
+    .legend {
+      display: flex;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
 
-        .legend {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-        }
+    .color-box {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
 
-        .color-box {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-            border-radius: 3px;
-        }
+    .first-shift {
+      background-color: #BBDEFB;
+    }
 
-        .first-shift { background-color: #BBDEFB; }
-        .second-shift { background-color: #C8E6C9; }
-        .third-shift { background-color: #E1BEE7; }
-        .off-day { background-color: #F5F5F5; }
+    .second-shift {
+      background-color: #C8E6C9;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    .third-shift {
+      background-color: #E1BEE7;
+    }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
+    .manager-cover {
+      background-color: #FFF59D;
+    }
 
-        th {
-            background-color: #ecf0f1;
-        }
+    .off-day {
+      background-color: #F5F5F5;
+    }
 
-        .day-number {
-            font-weight: bold;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        .shift-name {
-            font-size: 14px;
-            color: #555;
-        }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
 
-        .empty-cell {
-            background-color: #fff;
-        }
+    th {
+      background-color: #f2f2f2;
+    }
 
-        @media print {
-            button, .legend, .calendar-controls, header, footer {
-                display: none;
-            }
-            body {
-                background: white;
-                margin: 0;
-            }
-        }
-    </style>
+    .day-number {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .shift-name {
+      font-size: 14px;
+    }
+
+    .empty-cell {
+      background-color: #ffffff;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Work Shift Calendar</h1>
-        <h2>Hello World!</h2>
-    </header>
+  <h1>Work Shift Calendar</h1>
 
-    <div class="calendar-controls">
-        <button id="prev-month">&lt; Previous</button>
-        <div class="month-name" id="month-display"></div>
-        <button id="next-month">Next &gt;</button>
+  <div class="calendar-controls">
+    <button id="prev-month">&lt; Previous Month</button>
+    <div class="month-name" id="month-display">May 2025</div>
+    <button id="next-month">Next Month &gt;</button>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="color-box first-shift"></div> <div>1st Shift (Ben)</div>
     </div>
-
-    <div class="legend">
-        <div class="legend-item"><div class="color-box first-shift"></div>1st Shift</div>
-        <div class="legend-item"><div class="color-box second-shift"></div>2nd Shift</div>
-        <div class="legend-item"><div class="color-box third-shift"></div>3rd Shift</div>
-        <div class="legend-item"><div class="color-box off-day"></div>OFF</div>
+    <div class="legend-item">
+      <div class="color-box second-shift"></div> <div>2nd Shift (Deunte)</div>
     </div>
+    <div class="legend-item">
+      <div class="color-box third-shift"></div> <div>3rd Shift (Chris)</div>
+    </div>
+    <div class="legend-item">
+      <div class="color-box manager-cover"></div> <div>Manager Covers</div>
+    </div>
+    <div class="legend-item">
+      <div class="color-box off-day"></div> <div>OFF</div>
+    </div>
+  </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
-                <th>Thu</th><th>Fri</th><th>Sat</th>
-            </tr>
-        </thead>
-        <tbody id="calendar-body"></tbody>
-    </table>
+  <table id="calendar">
+    <thead>
+      <tr>
+        <th>Sunday</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+      </tr>
+    </thead>
+    <tbody id="calendar-body"></tbody>
+  </table>
 
-    <footer>
-        <p>&copy; 2025 Work Shift Calendar | All rights reserved.</p>
-    </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const referenceDate = new Date(2025, 4, 5); // May 5, 2025 (Monday)
+      let currentMonth = 4;
+      let currentYear = 2025;
 
-    <script>
-        const shiftPattern = [
-            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '2nd Shift', 'Thu': '2nd Shift', 'Fri': '1st Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
-            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '1st Shift', 'Thu': '1st Shift', 'Fri': '2nd Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
-            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': 'OFF', 'Thu': '2nd Shift', 'Fri': '2nd Shift', 'Sat': 'OFF', 'Sun': 'OFF'},
-            {'Mon': '3rd Shift', 'Tue': 'OFF', 'Wed': '2nd Shift', 'Thu': '1st Shift', 'Fri': '1st Shift', 'Sat': 'OFF', 'Sun': 'OFF'}
-        ];
+      const monthDisplay = document.getElementById('month-display');
+      const calendarBody = document.getElementById('calendar-body');
+      const prevMonthBtn = document.getElementById('prev-month');
+      const nextMonthBtn = document.getElementById('next-month');
 
-        const referenceDate = new Date(2025, 4, 1);
-        let currentMonth = 4;
-        let currentYear = 2025;
-
-        const calendarBody = document.getElementById('calendar-body');
-        const monthDisplay = document.getElementById('month-display');
-
-        document.getElementById('prev-month').onclick = () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } generateCalendar(); };
-        document.getElementById('next-month').onclick = () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } generateCalendar(); };
-
-        function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
-        function getFirstDayOfMonth(y, m) { return new Date(y, m, 1).getDay(); }
-        function getMonthName(m) {
-            return ['January','February','March','April','May','June','July','August','September','October','November','December'][m];
+      prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
         }
-        function getDayName(i) { return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][i]; }
-        function getShiftClass(shift) {
+        generateCalendar(currentYear, currentMonth);
+      });
+
+      nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        generateCalendar(currentYear, currentMonth);
+      });
+
+      function getDaysInMonth(year, month) {
+        return new Date(year, month + 1, 0).getDate();
+      }
+
+      function getFirstDayOfMonth(year, month) {
+        return new Date(year, month, 1).getDay();
+      }
+
+      function getMonthName(month) {
+        return ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'][month];
+      }
+
+      function getDayName(dayIndex) {
+        return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayIndex];
+      }
+
+      function getShiftsForDay(dayName) {
+        switch (dayName) {
+          case 'Monday':
             return {
-                '1st Shift': 'first-shift',
-                '2nd Shift': 'second-shift',
-                '3rd Shift': 'third-shift',
-                'OFF': 'off-day'
-            }[shift] || '';
+              '3rd Shift': 'OFF',
+              '1st Shift': '1st Shift',
+              '2nd Shift': '2nd Shift',
+              'Manager': 'Covers 3rd Shift'
+            };
+          case 'Tuesday':
+            return {
+              '3rd Shift': '3rd Shift',
+              '1st Shift': 'OFF',
+              '2nd Shift': '2nd Shift',
+              'Manager': 'Covers 1st Shift'
+            };
+          case 'Wednesday':
+            return {
+              '3rd Shift': '3rd Shift',
+              '1st Shift': '1st Shift',
+              '2nd Shift': 'OFF',
+              'Manager': 'Covers 2nd Shift'
+            };
+          case 'Thursday':
+          case 'Friday':
+            return {
+              '3rd Shift': '3rd Shift',
+              '1st Shift': '1st Shift',
+              '2nd Shift': '2nd Shift',
+              'Manager': 'OFF'
+            };
+          case 'Saturday':
+          case 'Sunday':
+            return {
+              '3rd Shift': 'OFF',
+              '1st Shift': 'OFF',
+              '2nd Shift': 'OFF',
+              'Manager': 'OFF'
+            };
+          default:
+            return {};
         }
+      }
 
-        function getShift(y, m, d) {
-            const date = new Date(y, m, d);
-            const diffDays = Math.floor((date - referenceDate) / (1000 * 60 * 60 * 24));
-            const weekIndex = Math.floor(Math.abs(diffDays) / 7) % 4;
-            const adjIndex = diffDays < 0 ? (4 - (Math.abs(diffDays) % 28) % 4) % 4 : weekIndex;
-            return shiftPattern[adjIndex][getDayName(date.getDay())] || '';
-        }
+      function getShiftClass(role, shift) {
+        if (shift === 'OFF') return 'off-day';
+        if (role === 'Manager') return 'manager-cover';
+        if (role === '1st Shift') return 'first-shift';
+        if (role === '2nd Shift') return 'second-shift';
+        if (role === '3rd Shift') return 'third-shift';
+        return '';
+      }
 
-        function generateCalendar() {
-            monthDisplay.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
-            calendarBody.innerHTML = '';
+      function generateCalendar(year, month) {
+        calendarBody.innerHTML = '';
+        monthDisplay.textContent = `${getMonthName(month)} ${year}`;
 
-            const days = getDaysInMonth(currentYear, currentMonth);
-            const start = getFirstDayOfMonth(currentYear, currentMonth);
-            let date = 1;
+        const daysInMonth = getDaysInMonth(year, month);
+        const firstDay = getFirstDayOfMonth(year, month);
+        let date = 1;
+        let rowCount = Math.ceil((daysInMonth + firstDay) / 7);
 
-            for (let row = 0; row < 6; row++) {
-                const tr = document.createElement('tr');
-                for (let col = 0; col < 7; col++) {
-                    const td = document.createElement('td');
-                    if (row === 0 && col < start || date > days) {
-                        td.classList.add('empty-cell');
-                    } else {
-                        const shift = getShift(currentYear, currentMonth, date);
-                        td.classList.add(getShiftClass(shift));
-                        td.innerHTML = `<div class="day-number">${date}</div><div class="shift-name">${shift}</div>`;
-                        date++;
-                    }
-                    tr.appendChild(td);
-                }
-                calendarBody.appendChild(tr);
+        for (let row = 0; row < rowCount; row++) {
+          const tr = document.createElement('tr');
+          for (let col = 0; col < 7; col++) {
+            const td = document.createElement('td');
+
+            if (row === 0 && col < firstDay || date > daysInMonth) {
+              td.classList.add('empty-cell');
+              tr.appendChild(td);
+              continue;
             }
-        }
 
-        generateCalendar();
-    </script>
+            const currentDate = new Date(year, month, date);
+            const dayName = getDayName(currentDate.getDay());
+            const shifts = getShiftsForDay(dayName);
+
+            const dayNumber = document.createElement('div');
+            dayNumber.classList.add('day-number');
+            dayNumber.textContent = date;
+
+            td.appendChild(dayNumber);
+
+            for (let [role, shift] of Object.entries(shifts)) {
+              const shiftDiv = document.createElement('div');
+              shiftDiv.classList.add('shift-name');
+              shiftDiv.textContent = `${role}: ${shift}`;
+              td.classList.add(getShiftClass(role, shift));
+              td.appendChild(shiftDiv);
+            }
+
+            date++;
+            tr.appendChild(td);
+          }
+          calendarBody.appendChild(tr);
+        }
+      }
+
+      generateCalendar(currentYear, currentMonth);
+    });
+  </script>
 </body>
 </html>
