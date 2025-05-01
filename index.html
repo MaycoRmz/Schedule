@@ -1,113 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supervisor Coverage Calendar</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f4f6f9;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supervisor Calendar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f6f9;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #2c3e50;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
 
-        .calendar {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
+    .calendar-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-        th, td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #eaeaea;
-        }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: #ccc;
+    }
 
-        th {
-            background-color: #34495e;
-            color: white;
-            text-transform: uppercase;
-        }
+    .day-name, .day {
+      background: white;
+      text-align: center;
+      padding: 10px;
+    }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
+    .day-name {
+      font-weight: bold;
+      background: #34495e;
+      color: white;
+    }
 
-        .off {
-            color: #e74c3c;
-            font-weight: bold;
-        }
+    .day {
+      min-height: 100px;
+      position: relative;
+    }
 
-        .covering {
-            color: #27ae60;
-            font-weight: bold;
-        }
-    </style>
+    .date {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 0.8em;
+      color: #999;
+    }
+
+    .off {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    .covering {
+      color: #27ae60;
+      font-weight: bold;
+    }
+
+    .print-btn {
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-    <h1>Weekly Supervisor Coverage</h1>
-    <div class="calendar">
-        <table>
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Supervisor Off</th>
-                    <th>Manager Covering</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Monday</td>
-                    <td class="off">Chris (3rd Shift)</td>
-                    <td class="covering">Miguel</td>
-                </tr>
-                <tr>
-                    <td>Tuesday</td>
-                    <td class="off">None</td>
-                    <td class="covering">Miguel</td>
-                </tr>
-                <tr>
-                    <td>Wednesday</td>
-                    <td class="off">Deunte (2nd Shift)</td>
-                    <td class="covering">Miguel</td>
-                </tr>
-                <tr>
-                    <td>Thursday</td>
-                    <td class="off">Ben (1st Shift)</td>
-                    <td class="covering">—</td>
-                </tr>
-                <tr>
-                    <td>Friday</td>
-                    <td class="off">None</td>
-                    <td class="covering">—</td>
-                </tr>
-                <tr>
-                    <td>Saturday</td>
-                    <td class="off">None</td>
-                    <td class="covering">—</td>
-                </tr>
-                <tr>
-                    <td>Sunday</td>
-                    <td colspan="2">All Off</td>
-                </tr>
-            </tbody>
-        </table>
+  <h1>Supervisor Monthly Calendar</h1>
+  <div class="calendar-container">
+    <div class="month-nav">
+      <button onclick="changeMonth(-1)">Previous</button>
+      <h2 id="month-year"></h2>
+      <button onclick="changeMonth(1)">Next</button>
     </div>
+    <div class="calendar" id="calendar"></div>
+    <button class="print-btn" onclick="window.print()">Print Month</button>
+  </div>
+
+  <script>
+    const names = ['Ben', 'Deunte'];
+    const calendarEl = document.getElementById('calendar');
+    const monthYearEl = document.getElementById('month-year');
+    let current = new Date();
+
+    function getRotation(date) {
+      const start = new Date(2025, 3, 28); // April 28, 2025
+      const diffWeeks = Math.floor((date - start) / (1000 * 60 * 60 * 24 * 7));
+      return diffWeeks % 2;
+    }
+
+    function renderCalendar(year, month) {
+      calendarEl.innerHTML = '';
+      const date = new Date(year, month);
+      monthYearEl.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      dayNames.forEach(day => {
+        const cell = document.createElement('div');
+        cell.className = 'day-name';
+        cell.textContent = day;
+        calendarEl.appendChild(cell);
+      });
+
+      const firstDay = new Date(year, month, 1);
+      const startDay = firstDay.getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < startDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day';
+        calendarEl.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateObj = new Date(year, month, day);
+        const dayOfWeek = dateObj.getDay();
+        const weekStart = new Date(dateObj);
+        weekStart.setDate(dateObj.getDate() - dateObj.getDay());
+        const rot = getRotation(weekStart);
+
+        const cell = document.createElement('div');
+        cell.className = 'day';
+
+        const dateLabel = document.createElement('div');
+        dateLabel.className = 'date';
+        dateLabel.textContent = day;
+        cell.appendChild(dateLabel);
+
+        if (dayOfWeek === 1) {
+          cell.innerHTML += '<div class="off">Chris (3rd Shift)</div><div class="covering">Miguel</div>';
+        } else if (dayOfWeek === 3) {
+          cell.innerHTML += `<div class="off">${names[rot]} (2nd Shift)</div><div class="covering">Miguel</div>`;
+        } else if (dayOfWeek === 4) {
+          cell.innerHTML += `<div class="off">${names[(rot + 1) % 2]} (1st Shift)</div><div class="covering">Miguel</div>`;
+        }
+
+        calendarEl.appendChild(cell);
+      }
+    }
+
+    function changeMonth(step) {
+      current.setMonth(current.getMonth() + step);
+      renderCalendar(current.getFullYear(), current.getMonth());
+    }
+
+    renderCalendar(current.getFullYear(), current.getMonth());
+  </script>
 </body>
 </html>
