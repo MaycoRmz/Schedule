@@ -72,6 +72,10 @@
       font-weight: bold;
     }
 
+    .holiday {
+      background-color: #fdecea;
+    }
+
     .print-btn {
       margin: 20px auto;
       display: block;
@@ -95,6 +99,17 @@
     const calendarEl = document.getElementById('calendar');
     const monthYearEl = document.getElementById('month-year');
     let current = new Date();
+
+    const holidays = {
+      '1-1': "New Year's Day",
+      '1-20': "Martin Luther King Jr. Day",
+      '5-26': "Memorial Day",
+      '6-19': "Juneteenth",
+      '7-4': "Independence Day",
+      '9-1': "Labor Day",
+      '11-27': "Thanksgiving Day",
+      '12-25': "Christmas Day",
+    };
 
     function getRotation(date) {
       const start = new Date(2025, 3, 28); // April 28, 2025
@@ -133,14 +148,23 @@
         const rot = getRotation(weekStart);
 
         const cell = document.createElement('div');
+        const key = `${month + 1}-${day}`;
+        const isHoliday = holidays[key] !== undefined;
+
         cell.className = 'day';
+        if (isHoliday || dayOfWeek === 0) {
+          cell.classList.add('holiday');
+        }
 
         const dateLabel = document.createElement('div');
         dateLabel.className = 'date';
         dateLabel.textContent = day;
         cell.appendChild(dateLabel);
 
-        if (dayOfWeek === 1) {
+        if (dayOfWeek === 0 || isHoliday) {
+          const label = holidays[key] ? holidays[key] : 'All Off';
+          cell.innerHTML += `<div class="off">${label} (All Off)</div>`;
+        } else if (dayOfWeek === 1) {
           cell.innerHTML += '<div class="off">Chris (3rd Shift)</div><div class="covering">Miguel</div>';
         } else if (dayOfWeek === 3) {
           cell.innerHTML += `<div class="off">${names[rot]} (2nd Shift)</div><div class="covering">Miguel</div>`;
